@@ -9,6 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     @State var rcbServerIP = "172.20.10.3"
+    let lYellow = Color(red: 255/255, green: 224/255, blue: 94/255)
+    let dYellow = Color(red: 213/255, green: 157/255, blue: 48/255)
+    let eBlue = Color(red: 165/255, green: 221/255, blue: 222/255)
+    let eBlack = Color(red: 82/255, green: 79/255, blue: 63/255)
+    let face = ["にっこりん", "むんっ", "悲しい"]
     var body: some View {
         Text("Control for RinachanBoard")
             .font(.title)
@@ -22,11 +27,22 @@ struct ContentView: View {
             }
             Spacer(minLength: 10)
         }
-        Button(action: {sendServer(boardID: 1)}) {
-            Text("Button 1")
-        }
-        Button(action: {sendServer(boardID: 2)}) {
-            Text("Button 2")
+        VStack{
+            HStack{
+                ForEach(0..<3) { i in
+                    Spacer()
+                    Button(action: {sendServer(boardID: i)}, label: {
+                        ZStack{
+                            Text(face[i])
+                                .accentColor(eBlack)
+                            Circle()
+                                .stroke(dYellow, lineWidth: 2)
+                                .frame(width: 78, height: 78)
+                        }
+                    })
+                    Spacer()
+                }
+            }
         }
     }
     
@@ -45,7 +61,8 @@ struct ContentView: View {
                 print("Content-Type: \(response.allHeaderFields["Content-Type"] ?? "")")
                 // HTTPステータスコード
                 print("statusCode: \(response.statusCode)")
-                print(String(data: data, encoding: String.Encoding.utf8) ?? "")
+                print(String(data: data, encoding: String.Encoding.utf8) ?? "404")
+                print(type(of: data))
             }
         }.resume()
         
